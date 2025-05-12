@@ -39,14 +39,12 @@ def nrz_signal(seq, tau):
             return seq[i]
         if step < tau / 4 and seq[i] == seq[i - 1] or 3 * tau / 4 < step and seq[i] == seq[i + 1]:
             return seq[i]
-        alpha = 0.01276
-        k = (4 * 2 * np.pi / tau) * np.cos(2 * np.pi * alpha - np.pi / 2)
-        b = 0.5 - k * tau / 4
+        local_w = 2 * np.pi / tau
         if 3 * tau / 4 < step:
             step -= 3 * tau / 4
         else:
             step = tau / 4 - step
-        res = 1 + np.sin(2 * np.pi * step / (tau / 4) - np.pi / 2) if step < (alpha * (tau / 4)) else k * step + b
+        res = 0.5 - 0.5 * np.cos(local_w * step)
         if seq[i] == 0:
             return res
         return 1 - res
@@ -55,18 +53,9 @@ def nrz_signal(seq, tau):
 
 
 if __name__ == "__main__":
-    # alpha = 0.01276
-    # tau = 25
-    # k = (2 * np.pi / tau) * np.cos(2 * np.pi * alpha - np.pi / 2)
-    # b = 0.5 - k * tau
-    # X = np.linspace(0, tau, 1000)
-    # Y = [1 + np.sin(2 * np.pi * x / tau - np.pi / 2) if x < alpha * tau else k * x + b for x in X]
-    # plt.plot(X, Y)
-    # plt.show()
-
-    s = [0, 1, 0, 1]
+    s = [0, 1, 0, 1, 1, 0, 0]
     signal = nrz_signal(s, 100)
-    t = np.linspace(0, 600, 10000)
+    t = np.linspace(0, 800, 10000)
     y = [signal(x) for x in t]
     plt.plot(t, y)
     plt.show()
