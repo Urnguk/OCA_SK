@@ -6,6 +6,12 @@ from matplotlib import pyplot as plt
 def gen_sequence(length):
     return [rm.randint(0, 1) for i in range(length)]
 
+def gauss_signal(mean, sigma):
+
+    def curr_signal(t):
+        return 1 / (sigma * (2 * np.pi) ** 0.5) * np.exp(-0.5 * (t - mean) ** 2 / sigma ** 2)
+
+    return curr_signal
 
 def flat_signal(seq, tau):
     t_full = tau * len(seq)
