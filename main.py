@@ -1,29 +1,36 @@
-import electrical_signal as els
+import generation as sg
+import visualization as vs
+import processing as pc
+import analisys as an
+
 import numpy as np
-from matplotlib import pyplot as plt
 from scipy import fft
-import random as rm
-from scipy.optimize import curve_fit
-
-
-def gauss_func(t, mean, sigma):
-    return 1 / (100 * sigma * (2 * np.pi) ** 0.5) * np.exp(-0.5 * (t - mean) ** 2 / sigma ** 2)
 
 
 if __name__ == "__main__":
-    tau = 1
+    tau = 0.1
     slots = 100
     n_dots = 2 ** 10
-    dots = np.linspace(0, slots * tau, n_dots)
 
-    seq = els.gen_sequence(slots)
-    get_flat = els.flat_signal(seq, tau)
-    get_nrz = els.nrz_signal(seq, tau)
+    timescale, signal = sg.gen_signal(slots, tau, n_dots)
+    omega, signal_omega = pc.fourier(signal, slots, tau, n_dots)
+    lpf = pc.LPF(omega)
+    new_signal = np.real(pc.inv_fft(signal_omega * lpf))
+    data = [
+        (timescale, signal),
+        (omega, np.abs(signal_omega)),
+        (timescale, new_signal),
+        (omega, np.abs(signal_omega * lpf))
+    ]
+    vs.multi_plot(data, ["TD", "FD", "TD", "FD"], n_rows=2, n_cols=2)
+    # vs.fast_plot(omega, lpf)
 
-    flat_y = [get_flat(x) for x in dots]
-    nrz_y = [get_nrz(x) for x in dots]
 
-    # plt.show()
+
+    # vs.eye_plot(an.eye_data(timescale, signal))
+
+
+
 
     # delta_y = np.array([rm.gauss(0.5, 0.1) for i in range(n_dots)])
     # nrz_y += delta_y * 0.1
@@ -32,10 +39,6 @@ if __name__ == "__main__":
 
 
 
-    nrz_w = fft.fft(nrz_y) ** 2
-    freqs = fft.fftfreq(n_dots, 1/n_dots)
-    plt.plot(freqs[:len(freqs) // 2], nrz_w[:len(freqs) // 2])
-    plt.show()
     #
 
     # mean = slots // 2
