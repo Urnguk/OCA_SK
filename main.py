@@ -17,17 +17,23 @@ if __name__ == "__main__":
     lpf = pc.LPF(omega)
     new_signal = np.real(pc.inv_fft(signal_omega * lpf))
     data = [
-        (timescale, signal),
-        (omega, np.abs(signal_omega)),
-        (timescale, new_signal),
-        (omega, np.abs(signal_omega * lpf))
+        (timescale, signal, "TD"),
+        (omega, np.abs(signal_omega), "FD"),
+        (timescale, new_signal, "TD"),
+        (omega, np.abs(signal_omega * lpf), "FD")
     ]
-    vs.multi_plot(data, ["TD", "FD", "TD", "FD"], n_rows=2, n_cols=2)
-    # vs.fast_plot(omega, lpf)
+    vs.multi_plot(data, n_rows=2, n_cols=2)
+
+    vs.fast_plot(omega, lpf)
+    data = [
+        an.eye_data(timescale, signal, slots, tau),
+        an.eye_data(timescale, new_signal, slots, tau)
+    ]
+    vs.multi_plot(data, 1, 2, subroutine=vs.eye_plot)
+    signal = new_signal
 
 
 
-    # vs.eye_plot(an.eye_data(timescale, signal))
 
 
 
