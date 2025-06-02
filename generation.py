@@ -43,9 +43,13 @@ def nrz_signal(t, seq, tau):
     return 1 - res
 
 
+def gen_signal(slots, tau, n_dots, signal_type=nrz_signal):
+    seq = gen_sequence(slots)
+    timescale = np.linspace(0, tau * slots, n_dots)
+    res = [signal_type(t, seq, tau) for t in timescale]
+    return timescale, res
+
+
 if __name__ == "__main__":
-    seq = gen_sequence(100)
-    tau = 20
-    timescale = np.linspace(0, len(seq) * tau, 10 ** 6)
-    y = [nrz_signal(t, seq, tau) for t in timescale]
+    timescale, y = gen_signal(3, 100, 2 ** 10)
     vs.fast_plot(timescale, y, "TD")
