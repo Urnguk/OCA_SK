@@ -4,9 +4,9 @@ import visualization as vs
 
 
 def gen_sequence(length):
-    if length < 2:
+    if length < 4:
         raise ValueError(f"sequence length {length} < 2")
-    return [0] + [rm.randint(0, 1) for i in range(length - 2)] + [0]
+    return [0, 0] + [rm.randint(0, 1) for i in range(length - 4)] + [0, 0]
 
 
 def gauss_signal(t, mean, sigma):
