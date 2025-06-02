@@ -3,11 +3,16 @@ import numpy as np
 
 
 def fast_plot(x, y, domain=None, show=True):
-    plt.plot(x, y)
     if domain == "TD":
         plt.xlabel("t, ps")
+        plt.ylabel("I, a.u.")
     if domain == "FD":
         plt.xlabel(r"$\omega$, GHz")
+        plt.ylabel("I, dB.")
+        x = x[len(x) // 2:]
+        y = y[len(y) // 2:]
+        y = 10 * np.log10(y)
+    plt.plot(x, y)
     plt.grid()
     if show:
         plt.show()
