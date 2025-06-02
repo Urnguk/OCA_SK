@@ -1,6 +1,6 @@
 import random as rm
 import numpy as np
-from matplotlib import pyplot as plt
+import visualization as vs
 
 
 def gen_sequence(length):
@@ -43,11 +43,9 @@ def nrz_signal(t, seq, tau):
     return 1 - res
 
 
-
 if __name__ == "__main__":
     seq = gen_sequence(100)
     tau = 20
     timescale = np.linspace(0, len(seq) * tau, 10 ** 6)
     y = [nrz_signal(t, seq, tau) for t in timescale]
-    plt.plot(timescale, y)
-    plt.show()
+    vs.fast_plot(timescale, y, "TD")
