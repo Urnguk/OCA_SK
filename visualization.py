@@ -4,7 +4,7 @@ import numpy as np
 
 def fast_plot(x, y, domain=None, show=True):
     if domain == "TD":
-        plt.xlabel("t, ps")
+        plt.xlabel("t, ns")
         plt.ylabel("I, a.u.")
     if domain == "FD":
         plt.xlabel(r"$\omega$, GHz")
@@ -18,21 +18,26 @@ def fast_plot(x, y, domain=None, show=True):
         plt.show()
 
 
-def multi_plot(data, domains=None, n_rows=1, n_cols=2, show=True):
-    if domains is None:
-        domains = [None] * len(data)
+def multi_plot(data, n_rows=1, n_cols=2,
+               show=True, subroutine=fast_plot):
     for i in range(len(data)):
         plt.subplot(n_rows, n_cols, i + 1)
-        fast_plot(*data[i], domains[i], show=False)
+        if subroutine == fast_plot:
+            subroutine(*data[i], show=False)
+        else:
+            subroutine(data[i], show=False)
     if show:
         plt.show()
 
 
-def eye_plot(eye_data):
+def eye_plot(eye_data, show=True):
     for X, Y in eye_data:
         plt.plot(X, Y, color="blue")
+        plt.xlabel("t, ns")
+        plt.ylabel("I, a.u.")
     plt.grid()
-    plt.show()
+    if show:
+        plt.show()
 
 
 
