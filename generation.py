@@ -47,7 +47,7 @@ def gen_signal(slots, tau, n_dots, signal_type=nrz_signal):
     seq = gen_sequence(slots)
     timescale = np.linspace(0, tau * slots, n_dots)
     res = [signal_type(t, seq, tau) for t in timescale]
-    return timescale, res
+    return seq, timescale, res
 
 
 if __name__ == "__main__":
